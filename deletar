@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR" dir="ltr">
+    <?php
+    if ($_SERVER['SERVER_PORT'] != '443') {
+       header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+       exit();
+    }
+    require 'admin/inc/config.php';
+    ?>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+            <link rel="icon" href="imagens/favicon.png" sizes="96x96">
+
+
+<?php
+// Recebe os parametros da url para definir a página a ser exibida
+$urlSessions = filter_input(INPUT_GET, 'url', FILTER_DEFAULT);
+
+//ARRAY COM AS PARTES DA URL ATUAL
+$urlSessions = explode("/", $urlSessions);
+
+$getUrl = strip_tags(trim(filter_input(INPUT_GET, 'url', FILTER_DEFAULT)));
+$setUrl = (empty($getUrl) ? 'home' : $getUrl);
+$url = explode('/', $setUrl);
+
+//BUSCAR TODOS OS DADOS DE INFORMAÇÕES DA PÁGINA E CONFIGURAÇÕES
+$readConfig = new Read();
+$readConfig->FullRead("SELECT * FROM tbl_config");
+$sysConfig = $readConfig->getResult()[0];
+
+//EXECULTA AS FUNÇÕES DE ESTATISTICAS DO SITE
+$visitas = new PageViews();
+$visitas->ViewUnique();
+$visitas->userOnline('online');
+?>
+
+
+            <title>Summer Camp Rancho Victory</title>
+            <meta name="description" content="<?php echo $sysConfig["descricao_config"] ?>"/>
+            <meta name="keywords" content="<?php echo $sysConfig["keywords_config"] ?>"/>
+            <link rel="canonical" href="<?php echo __URL__ ?>" />
+            <meta property="og:locale" content="pt_BR" />
+            <meta property="og:type" content="website" />
+            <meta property="og:title" content="<?php echo $sysConfig["titulo_config"] ?>" />
+            <meta property="og:description" content="<?php echo $sysConfig["descricao_config"] ?>" />
+            <meta property="og:url" content="<?php echo __URL__ ?>" />
+            <meta property="og:site_name" content="<?php echo $sysConfig["titulo_config"] ?>" />
+            <meta property="og:image" content="<?php echo __URL__ . 'imagens/' . $sysConfig["capa_redes_config"]; ?>">
+            <meta property="og:image:type" content="image/jpeg">
+            <meta property="og:image:width" content="800">
+            <meta property="og:image:height" content="600">
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:description" content="<?php echo $sysConfig["descricao_config"] ?>" />
+            <meta name="twitter:title" content="<?php echo $sysConfig["titulo_config"] ?>" />
+           
+            
+
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5142881822696003"
+     crossorigin="anonymous"></script>
+
+            <!-- Global site tag (gtag.js) - Google Analytics -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144762235-1"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
+
+                gtag('config', 'UA-144762235-1');
+            </script>
+            <script type="application/ld+json">
+                [{
+                "@context" : "http://schema.org",
+                "@type" : "LodgingBusiness",
+                "name" : "Colônia de Férias Rancho Victory",
+                "image" : "https://ranchovictory.com.br/galeria/2dJXMta1Qs.jpg",
+                "telephone" : "(61) 3366 - 2109 (61) 99204 - 6270",
+                "address" : {
+                "@type" : "PostalAddress",
+                "streetAddress" : "SMDB Conjunto 12 Bloco E, Sala 107",
+                "addressRegion" : "Lago Sul - Brasília-DF",
+                "postalCode" : "70.680-120"
+                }
+                }]
+            </script>
+            <style>
+            .faixa-Alerta{
+                border: 1px solid red;
+                padding: 15px;
+                margin-bottom: 25px; 
+                background-color: cornsilk;
+            }
+
+            .faixa-Alerta h1{
+                font-size: 20px;
+                color: red;
+                font-weight: bold;
+                margin-bottom: 10px 
+            }
+
+            .faixa-Alerta a{
+                color: red;
+            }
+
+            </style>
+        </head>
+        <body>
+
+<?php
+if ($url[0] !== 'inscricao' || $url[0] !== 'inscricao-sucesso') {
+    ?>
+
+                              
+                              <div id="contentModal" class="contentModal">
+                                    <div class="meuModalHome">
+                                        <a href="javascript:void(0)"><div class="closedModal">X</div></a>
+                                        <a href="https://www.ranchovictory.com.br/inscricao"><img src="<?= __URL__ ?>imagens/dupla_temporadas_de_julho_2025.webp?v=<?= time() ?>" style="max-width: 900px"></a>
+                                    </div>        
+                                </div>
+                                
+<?php } ?>
+
+            <div id="loader"></div>
+            <!-- ===== Faixa-topo =====-->
+            <div class="container-fluid">
+                <div class="container">
+                    <div class="row faixa-topo">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 topo-texto faixa-centro">
+                            <p class="destaqueContato">Contato: (61) 99204 6270 | (61) 98265-6539 </p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <div class="row">
+
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 redes-icons">
+                                    <ul>
+                                        <li><a href="https://api.whatsapp.com/send?phone=5561992046270&text=Ol%C3%A1!" target="_blank"><img src="<?php echo __URL__ ?>imagens/whatsapp.png"></a></li>
+                                        <li><a href="https://www.instagram.com/ranchovictory/" target="_blank"><img src="<?php echo __URL__ ?>imagens/instagram.png"></a></li>
+                                    </ul>
+                                </div>
+                                <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="busca-lupa">
+                                        <input class="buscar" type="text" placeholder="Buscar...">
+                                    </div>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<?php
+if ($url[0] === 'home') {
+    ?>
+                    <div class="banner">
+                        <div id="owl-banner" class="owl-carousel owl-theme">
+
+                    <?php
+                    //Listar banners
+                    $sqlBanners = new Read();
+                    $sqlBanners->FullRead("SELECT b.titulo_banner, b.subtitulo_banner, b.link_banner, b.arquivo_banner, j.tag_janela FROM tbl_banner b
+                        INNER JOIN tbl_janela_banner j ON j.id_janela = b.id_janela
+                        WHERE b.data_entrada_banner <= CURDATE()
+                        AND b.data_saida_banner >= CURDATE()
+                        OR b.data_saida_banner = b.data_entrada_banner
+                        AND b.id_local = 1
+                        ORDER BY b.ordem_banner ASC");
+
+                    if ($sqlBanners->getResult()) {
+                        foreach ($sqlBanners->getResult() as $linhas) {
+                            extract($linhas);
+
+                            if (!empty($link_banner)) {
+                                $linkBanner = array(
+                                    "abre" => '<a href="' . $link_banner . '" target="' . $tag_janela . '">',
+                                    "fecha" => '</a>',
+                                );
+                            } else {
+                                $linkBanner = array(
+                                    "abre" => null,
+                                    "fecha" => null,
+                                );
+                            }
+
+                            echo '
+
+                                ' . $linkBanner["abre"] . '
+                                <div class="item lazy-img">
+                                    <div class="legenda-banner">
+                                        <h2></h2>
+                                        <h3></h3>
+                                    </div>
+                                    <img src="" data-url="' . __URL__ . 'banner/' . $arquivo_banner . '">
+                                </div>
+                                 ' . $linkBanner["fecha"] . '
+                                ';
+                        }
+                    }
+                    ?>
+
+                        </div>
+                        <div class="logo">
+                            <a href="<?php echo __URL__ ?>"><img src="<?php echo __URL__ ?>imagens/logo-rancho-victory.png"></a>
+                        </div>
+                        <div class="ranchoSlogamBanner">
+                            <p>O RANCHO É UM LUGAR MÁGICO</p>
+                        </div>
+                    </div>
+                    <div id="topo-fixo" class="faixa-menu">
+                        <div class="container">
+                            <nav class="navbar">
+                                <!-- LOGO -->
+                                <div class="logo-container">
+
+                                    <!-- Hamburger Button -->
+                                    <span class="menu-bar" onclick="showHide()">
+                                        <i class="icon-bar"></i>
+                                        <i class="icon-bar"></i>
+                                        <i class="icon-bar"></i>
+                                    </span>
+                                </div>
+                                <!-- NAV ITEMS -->
+
+                                <div class="menus-container" id="navList">
+                                    <ul>
+    <?php
+    //LISTAR TODOS OS MENUS
+    $readMenus = new Read();
+    $readMenus->FullRead("
+                                    SELECT m.nome_menu, m.url_menu, m.rotulo_menu, j.tag_janela FROM tbl_menu m
+                                    INNER JOIN tbl_janela_banner j ON m.id_janela = j.id_janela
+                                    WHERE m.tipo_menu = 1
+                                    ORDER BY m.ordem_menu ASC
+                                    ");
+
+    if ($readMenus->getResult()) {
+        foreach ($readMenus->getResult() as $menus) {
+            extract($menus);
+            echo '<li><a href="' . __URL__ . '' . $url_menu . '" alt="' . $rotulo_menu . '" title="' . $rotulo_menu . '" target="' . $tag_janela . '">' . $nome_menu . '</a></li>';
+        }
+    }
+    ?>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+    <?php
+} else {
+
+    $readImgMenu = new Read();
+    $readImgMenu->FullRead("SELECT imagem_menu FROM tbl_menu WHERE slug_menu = '{$url[0]}'");
+    if ($readImgMenu->getResult()) {
+        $imgBgParallax = $readImgMenu->getResult()[0];
+    } else {
+        $imgBgParallax = null;
+    }
+	
+    ?>
+                <section class="parallax parallax-demo"></section>
+
+                <?php
+                if ($url[0] === 'inscricao'):
+                    ?>
+                    <div class="parallax parallax-demo banner-geral" style="background-image: url('<?php echo __URL__ ?>imagens/temp-banner.jpg')">
+                    <?php
+				elseif ($url[0] === 'contato-rancho'):
+					?>
+                    <div class="parallax parallax-demo banner-geral" style="background-image: url('<?php echo __URL__ ?>post/contato-rancho.jpg')">
+                    <?php
+					elseif ($url[0] === 'rancho-victory-quem-somos'):
+					?>
+                    <div class="parallax parallax-demo banner-geral" style="background-image: url('<?php echo __URL__ ?>post/rancho-victory-quem-somos.webp')">
+                    <?php
+                else:
+                    ?>
+                        <div class = "parallax parallax-demo banner-geral" style = "background-image: url('<?php echo __URL__ ?>post/<?php echo $imgBgParallax["imagem_menu"] ?>')">
+                    <?php
+                endif;
+                    ?>
+
+
+                        <div class="fundo-preto"></div>
+                        <div class="logo-interna" id="fixa-menu-interna" ><a href="<?php echo __URL__ ?>"><img src="<?php echo __URL__ ?>imagens/logo-rancho-victory.png"></a></div>
+                        <div class="box-menu">
+                            <div id="topo-fixo-interna" class="faixa-menu-geral">
+                                <div class="container">
+
+                                    <nav class="navbar">
+                                        <!-- LOGO -->
+                                        <div class="logo-container">
+
+                                            <!-- Hamburger Button -->
+                                            <span class="menu-bar" onclick="showHide()">
+                                                <i class="icon-bar"></i>
+                                                <i class="icon-bar"></i>
+                                                <i class="icon-bar"></i>
+                                            </span>
+                                        </div>
+                                        <!-- NAV ITEMS -->
+
+                                        <div class="menus-container" id="navList">
+                                            <ul>
+    <?php
+    //LISTAR TODOS OS MENUS
+    $readMenus = new Read();
+    $readMenus->FullRead("
+                                    SELECT m.nome_menu, m.url_menu, m.rotulo_menu, j.tag_janela FROM tbl_menu m
+                                    INNER JOIN tbl_janela_banner j ON m.id_janela = j.id_janela
+                                    WHERE m.tipo_menu = 1
+                                    ORDER BY m.ordem_menu ASC
+                                    ");
+
+    if ($readMenus->getResult()) {
+        foreach ($readMenus->getResult() as $menus) {
+            extract($menus);
+            echo '<li><a href="' . __URL__ . '' . $url_menu . '" alt="' . $rotulo_menu . '" title="' . $rotulo_menu . '" target="' . $tag_janela . '">' . $nome_menu . '</a></li>';
+        }
+    }
+    ?>
+                                            </ul>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    <?php
+}
+?>
+
+
+                <!-- ===== Menu ===== -->
+
+                <?php
+//RECEBE O INDEX DO ARRAY $url E COMPLETA COM A EXTENÇÃO DA PÁGINA .PHP
+                $file = $url[0] . '.php';
+
+//CASO A PÁGINA EXISTE CARREGA A MESMA CASO CONTRARIO CARREGA A PÁGINA GENERICA
+                if (is_file($file)) {
+                    require $file;
+                } else {
+                    require 'geral.php';
+                }
+                ?>
+
+                <!--  ===== Rodape =====  -->
+                <footer>
+                    <div class="container">
+                        <div class="row contato">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 logo-icones">
+                                <!--<img src="" alt="Logo Rancho">-->
+
+                                <div class="lazy-img">
+                                    <img src="" style="width:86px" data-url="<?php echo __URL__ ?>imagens/logo-rancho-victory.png">
+                                </div>
+                                <br>
+                                <p>(61) 99204-6270</p>
+                                <p>(61) 98265-6539</p>
+                                <p>ranchovictorybsb@gmail.com</p>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 rodape-icons">
+							
+                                <ul class="lazy-img">
+                                    <li><a href="https://api.whatsapp.com/send?phone=5561992046270&text=Ol%C3%A1!" target="_blank"><img src="<?php echo __URL__ ?>imagens/whatsapp.png"></a></li>
+                                        <li><a href="https://www.instagram.com/ranchovictory/" target="_blank"><img src="<?php echo __URL__ ?>imagens/instagram.png"></a></li>
+                                </ul>
+                                <p>Endereço da Diretoria (Home Office)</p>
+                                <p>Condomínio Vivendas Lago Azul,</p>
+                                <p>Grande Colorado, Sobradinho-DF.</p>
+                                <p>Casa E10</p>
+                                <p>CEP: 73105-908</p>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <div class="lazy-img rodape-faixa">
+                    <p>© 2021 Summer Camp Rancho Victory</p>
+                    <img src="" data-url="<?php echo __URL__ ?>imagens/prontary-logo.png">
+                </div>
+            </div>
+            <link rel="stylesheet" href="<?php echo __URL__ ?>css/css.css">
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+            <link href="https://fonts.googleapis.com/css?family=Viga" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Sue+Ellen+Francisco" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Charmonman" rel="stylesheet">
+            <script src="<?php echo __URL__ ?>js/jquery-3.3.1.min.js" type="application/javascript"></script>
+            <script src="<?php echo __URL__ ?>js/site.js" type="application/javascript"></script>
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+            <link rel="stylesheet" type="text/css" href="<?php echo __URL__ ?>dist/overhang.min.css" />
+            <script type="text/javascript" src="<?php echo __URL__ ?>dist/overhang.min.js"></script>
+            <script src="<?php echo __URL__ ?>js/owl.carousel.js" type="application/javascript"></script>
+            <link rel="stylesheet" href="<?php echo __URL__ ?>css/owl.carousel.css">
+            <link rel="stylesheet" href="<?php echo __URL__ ?>css/owl.theme.css">
+            <link rel="stylesheet" href="<?php echo __URL__ ?>grid/flexboxgrid.css">
+            <script src="<?php echo __URL__ ?>app/fancybox-3.3.5/jquery.fancybox.min.js" type="text/javascript"></script>
+            <link href="<?php echo __URL__ ?>app/fancybox-3.3.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css"/>
+            <script src="<?php echo __URL__ ?>js/jquery.mask.js" type="application/javascript"></script>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.26/sweetalert2.all.min.js" integrity="sha512-bVcYYoHEq3wY3x3w9TMN1dt25bbLyGO9xfAbGgTqCdirYUht2rR+drAMtvlduQ7sA0/XRoFu1oWMVEw8Uno0Gw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.26/sweetalert2.js" integrity="sha512-a4Co268hIcue9nuTuVaaxcVISS2xAk0pbALGDCcTKd80HM1Eanolfb+Qsj9k5Q4wCeuNg+nSEqOkLj7yzjQ+Aw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.26/sweetalert2.min.css" integrity="sha512-yq+qDDTUuLA4zvJjuvcpV809SNmM0ReTyeadKsNvW0cSvGVfj3K20SdlkburwJHHdzuGDtFElBcxndjd7J3nrQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+            <script>
+                                                function showHide() {
+                                                    var navList = document.getElementById("navList");
+                                                    if (navList.className == 'menus-container') {
+                                                        navList.classList.add("menus-container-block");
+                                                    } else {
+                                                        navList.classList.remove("menus-container-block");
+                                                    }
+                                                }
+
+                                                jQuery(document).ready(function () {
+                                                    var jElement = $('#topo-fixo');
+                                                    $(window).scroll(function () {
+                                                        var div = $("#ancora");
+                                                        var position = div.position();
+                                                        var topo = Math.round(position.top) - 150;
+
+                                                        if ($(this).scrollTop() > topo) {
+                                                            jElement.addClass("fixar");
+                                                        } else {
+                                                            jElement.removeClass("fixar");
+                                                        }
+                                                    });
+
+                                                    $('.contentModal').click(function () {
+                                                        $('.contentModal').addClass('modalHidde');
+                                                    });
+
+
+                                                });
+            </script>
+        </body>
+    </html>
